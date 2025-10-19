@@ -1,56 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
+<html lang="es">
+  <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FrontEnd Store</title>
-    <link rel="stylesheet" href="css/normalize.css">
-    <link href="https://fonts.googleapis.com/css2?family=Staatliches&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-</head>
-
-<body>
-    <header class="header">
-        <a href="index.html">
-            <img class="header__logo" src="img/logo.png" alt="Logotipo">
-        </a>
-    </header>
-    <nav class="navegacion">
-        <a class="navegacion__enlace navegacion__enlace--activo" href="index.html">Tienda</a>
-        <a class="navegacion__enlace" href="nosotros.html">Nosotros</a>
-    </nav>
-    <main class="contenedor">
-        <h1>React Js</h1>
-
-        <div class="camisa">
-            <img class="camisa__imagen" src="img/modelo-3.svg" alt="Modelo con camiseta">
-
-            <div class="camisa__contenido">
-                <p>In vel feugiat sapien, ut lobortis leo. Integer magna nunc, sollicitudin vitae pretium ut, efficitur
-                    vel magna.In vel feugiat sapien, ut lobortis leo. Integer magna nunc, sollicitudin vitae pretium ut,
-                    efficitur
-                    vel magna.</p>
-
-                <form class="formulario">
-                    <select class="formulario__campo">
-                        <option disabled selected>--Seleccionar Talla--</option>
-                        <option>Small</option>
-                        <option>Medium</option>
-                        <option>Large</option>
-                    </select>
-                    <input class="formulario__campo" type="number" placeholder="Cantidad" min="1">
-                    <input class="formulario__submit" type="submit" value="Agregar al Carrito">
-                </form>
-            </div>
+    <title>Producto | Dr-Market</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/landing-theme.css">
+  </head>
+  <body>
+    <header>
+      <div class="container nav">
+        <div class="brand">
+          <div class="brand-logo" aria-hidden="true"></div>
+          <span>Dr'Market</span>
         </div>
+        <nav class="nav-actions" aria-label="Principal">
+          <a class="btn" href="landing.html#inicio">Inicio</a>
+          <a class="btn" href="index.html">Tienda</a>
+          <a class="btn" href="producto.html" aria-current="page">Producto</a>
+          <a class="btn" href="nosotros.html">Nosotros</a>
+        </nav>
+      </div>
+    </header>
 
+    <main>
+      <section class="surface-block">
+        <div class="product-detail">
+          <figure>
+            <img src="img/modelo-3.svg" alt="Camiseta React JS azul">
+          </figure>
+          <div>
+            <h1 class="section-title">React JS Limited Edition</h1>
+            <p class="section-sub">Camiseta unisex 100&nbsp;% algod&oacute;n org&aacute;nico con estampado en serigraf&iacute;a japonesa. Suavidad premium y durabilidad pensada para el uso diario.</p>
+            <div class="price">25&nbsp;&euro;</div>
+            <div class="badges">
+              <span class="badge">Corte unisex</span>
+              <span class="badge">Edici&oacute;n 2024</span>
+              <span class="badge">Tintas libres de ftalatos</span>
+            </div>
+            <form class="form" action="#" method="post">
+              <label for="talla">Selecciona talla</label>
+              <select id="talla" name="talla" required>
+                <option value="" selected disabled>Elige una opci&oacute;n</option>
+                <option value="s">Small</option>
+                <option value="m">Medium</option>
+                <option value="l">Large</option>
+                <option value="xl">XL</option>
+              </select>
+              <label for="cantidad">Cantidad</label>
+              <input id="cantidad" name="cantidad" type="number" min="1" value="1" required>
+              <button type="submit">Agregar al carrito</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section class="surface-block compact">
+        <h2 class="section-title">Detalles t&eacute;cnicos</h2>
+        <div class="features">
+          <div class="feature">
+            <div class="icon">TELA</div>
+            <div>
+              <h4>Algod&oacute;n ultrafino</h4>
+              <p>180 g/m&sup2; peinado, ideal para climas templados.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="icon">COLOR</div>
+            <div>
+              <h4>Azul profundo</h4>
+              <p>Te&ntilde;ido reactivo que preserva la intensidad tras cada lavado.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="icon">CUIDO</div>
+            <div>
+              <h4>Mantenimiento sencillo</h4>
+              <p>Lavar en fr&iacute;o, secar a la sombra y planchar del rev&eacute;s para conservar el estampado.</p>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
-    <footer class="footer">
-        <p class="footer__texto">Front End Store - Todos los derechos reservados 2023.</p>
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="footer-logo" aria-hidden="true"></div>
+          <span>Dr'Market</span>
+        </div>
+        <p>&copy; 2024 Dr'Market. Todos los derechos reservados.</p>
+        <a href="mailto:hola@drmarket.com">hola@drmarket.com</a>
+      </div>
     </footer>
-</body>
-
+  </body>
 </html>

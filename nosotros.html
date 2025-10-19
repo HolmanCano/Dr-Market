@@ -1,85 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
+<html lang="es">
+  <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FrontEnd Store</title>
-    <link rel="stylesheet" href="css/normalize.css">
-    <link href="https://fonts.googleapis.com/css2?family=Staatliches&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-</head>
-
-<body>
-    <header class="header">
-        <a href="index.html">
-            <img class="header__logo" src="img/logo.png" alt="Logotipo">
-        </a>
-    </header>
-    <nav class="navegacion">
-        <a class="navegacion__enlace" href="index.html">Tienda</a>
-        <a class="navegacion__enlace navegacion__enlace--activo" href="#">Nosotros</a>
-    </nav>
-    <main class="contenedor">
-        <h1>Nosotros</h1>
-        <div class="nosotros">
-            <div class="nosotros__contenido">
-                <p>Suspendisse interdum ipsum vel pretium lacinia. In dictum tortor id aliquet convallis.
-                    Vestibulum finibus hendrerit est, sed volutpat turpis interdum quis.
-                    Cras pulvinar arcu quis magna condimentum, quis pharetra quam ultricies.
-                    In vel feugiat sapien, ut lobortis leo. Integer magna nunc, sollicitudin vitae pretium ut, efficitur
-                    vel magna.
-                    Curabitur sit amet semper sapien. In ultricies blandit felis, in accumsan purus. Nulla in fringilla
-                    mauris, nec facilisis quam.
-                    Morbi facilisis enim id dui blandit pulvinar. Orci varius natoque penatibus et magnis dis parturient
-                    montes, nascetur ridiculus mus.
-                    Integer a augue interdum, blandit nisi id, mollis nibh. Suspendisse laoreet suscipit dignissim.
-                    Proin non magna ut sapien interdum blandit. Proin sollicitudin nibh velit, eu eleifend sapien
-                    efficitur mollis.
-                    Cras auctor, odio non aliquet tincidunt, dolor lorem tempus diam, id pretium orci mauris sit amet
-
-                </p>
-
-            </div>
-            <img class="nosotros__imagen" src="img/nosotros.jpg" alt="imagen nosotros">
+    <title>Nosotros | Dr-Market</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/landing-theme.css">
+  </head>
+  <body>
+    <header>
+      <div class="container nav">
+        <div class="brand">
+          <div class="brand-logo" aria-hidden="true"></div>
+          <span>Dr'Market</span>
         </div>
+        <nav class="nav-actions" aria-label="Principal">
+          <a class="btn" href="landing.html#inicio">Inicio</a>
+          <a class="btn" href="index.html">Tienda</a>
+          <a class="btn" href="producto.html">Producto</a>
+          <a class="btn" href="nosotros.html" aria-current="page">Nosotros</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="surface-block">
+        <div class="about-grid">
+          <div>
+            <h1 class="section-title">Pasi&oacute;n por la personalizaci&oacute;n textil</h1>
+            <p class="section-sub">En Dr-Market convertimos tus ideas en piezas memorables para tu marca, evento o comunidad. Combinamos tecnolog&iacute;a de punta con oficios artesanales para lograr acabados impecables.</p>
+            <p>Trabajamos con algodones org&aacute;nicos, tintas hipoalerg&eacute;nicas y procesos responsables con el medio ambiente. Nuestro equipo acompa&ntilde;a cada proyecto desde el boceto hasta la entrega final, cuidando cada detalle.</p>
+            <div class="badges">
+              <span class="badge">+8 a&ntilde;os de experiencia</span>
+              <span class="badge">Producci&oacute;n local</span>
+              <span class="badge">Atenci&oacute;n 24/7</span>
+            </div>
+          </div>
+          <figure>
+            <img src="img/nosotros.jpg" alt="Equipo creativo de Dr-Market en el taller">
+          </figure>
+        </div>
+      </section>
+
+      <section class="surface-block compact">
+        <h2 class="section-title">Nuestra forma de trabajar</h2>
+        <div class="steps">
+          <div class="step">
+            <div class="step-index">1</div>
+            <div>
+              <h4>Brief y asesoramiento</h4>
+              <p>Nos compartes tu idea, fechas y presupuesto. Te recomendamos los tejidos, t&eacute;cnicas y acabados ideales.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-index">2</div>
+            <div>
+              <h4>Dise&ntilde;o y prototipos</h4>
+              <p>Preparamos mockups y pruebas de color para validar detalles antes de producir.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-index">3</div>
+            <div>
+              <h4>Producci&oacute;n y log&iacute;stica</h4>
+              <p>Fabricamos con control de calidad continuo y coordinamos env&iacute;os a todo el pa&iacute;s.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="surface-block compact">
+        <h2 class="section-title">Valores que nos gu&iacute;an</h2>
+        <div class="features">
+          <div class="feature">
+            <div class="icon">COL</div>
+            <div>
+              <h4>Colaboraci&oacute;n real</h4>
+              <p>Escuchamos a nuestros clientes y co-creamos cada pieza junto a ellos.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="icon">IDEA</div>
+            <div>
+              <h4>Creatividad aplicada</h4>
+              <p>Experimentamos con nuevas t&eacute;cnicas y tendencias para destacar tu marca.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="icon">QA</div>
+            <div>
+              <h4>Calidad sin atajos</h4>
+              <p>Revisamos cada prenda manualmente para garantizar un resultado impecable.</p>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
-    <section class="contenedor comprar">
-        <h2>¿porque comprar con nosotros?</h2>
 
-        <div class="bloques">
-            <div class="bloque">
-                <img class="bloque__imagen" src="img/icono_1.png" alt="Porque comprar">
-                <h3 class="bloque__titulo">El Mejor Precio</h3>
-                <p>Proin non magna ut sapien interdum blandit. Proin sollicitudin nibh velit, eu eleifend sapien
-                    efficitur mollis.</p>
-            </div> <!--.bloque-->
-            <div class="bloque">
-                <img class="bloque__imagen" src="img/icono_2.png" alt=" Para Devs">
-                <h3 class="bloque__titulo">El Mejor Precio</h3>
-                <p>Proin non magna ut sapien interdum blandit. Proin sollicitudin nibh velit, eu eleifend sapien
-                    efficitur mollis.</p>
-            </div> <!--.bloque-->
-            <div class="bloque">
-                <img class="bloque__imagen" src="img/icono_3.png" alt="Envio Gratis">
-                <h3 class="bloque__titulo">El Mejor Precio</h3>
-                <p>Proin non magna ut sapien interdum blandit. Proin sollicitudin nibh velit, eu eleifend sapien
-                    efficitur mollis.</p>
-            </div> <!--.bloque-->
-            <div class="bloque">
-                <img class="bloque__imagen" src="img/icono_4.png" alt="La mejor calidad">
-                <h3 class="bloque__titulo">El Mejor Precio</h3>
-                <p>Proin non magna ut sapien interdum blandit. Proin sollicitudin nibh velit, eu eleifend sapien
-                    efficitur mollis.</p>
-            </div> <!--.bloque-->
-        </div><!--bloques-->
-
-    </section>
-
-    <footer class="footer">
-        <p class="footer__texto">Front End Store - Todos los derechos reservados 2023.</p>
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="footer-logo" aria-hidden="true"></div>
+          <span>Dr'Market</span>
+        </div>
+        <p>&copy; 2024 Dr'Market. Todos los derechos reservados.</p>
+        <a href="mailto:hola@drmarket.com">hola@drmarket.com</a>
+      </div>
     </footer>
-</body>
-
+  </body>
 </html>
