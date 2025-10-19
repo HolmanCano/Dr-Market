@@ -1,209 +1,196 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Mockup camiseta - subir imagen</title>
-  <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;display:flex;flex-direction:column;align-items:center;padding:20px;background:#f4f6f8}
-    h1{font-size:18px;margin-bottom:6px}
-    .app{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
-    .canvas-wrap{background:white;padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(10,10,10,0.08)}
-    canvas{display:block;background:transparent;border-radius:6px;cursor:grab}
-    .controls{max-width:360px}
-    .controls label{display:block;margin-top:8px;font-size:13px}
-    input[type=range]{width:100%}
-    .btn{margin-top:12px;padding:8px 12px;border-radius:8px;border:0;background:#0b66ff;color:white;cursor:pointer}
-    .muted{color:#556;font-size:13px}
-    .small{font-size:12px;color:#666}
-    .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .note{margin-top:8px;font-size:12px;color:#444}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup de Camiseta</title>
+<style>
+  body {font-family: system-ui, sans-serif; background:#f4f6f8; margin:0; padding:20px; display:flex; flex-direction:column; align-items:center;}
+  h1 {font-size:20px;}
+  canvas {background:#fff; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
+  .panel {margin-top:15px; display:flex; flex-wrap:wrap; gap:10px; justify-content:center;}
+  button, select, input[type=range] {
+    padding:8px 12px; border-radius:8px; border:1px solid #ccc; background:white;
+    cursor:pointer; font-size:14px;
+  }
+  button:hover {background:#0b66ff; color:white; border-color:#0b66ff;}
+  label {display:block; font-size:13px; margin-top:10px;}
+  .control-group {max-width:400px; margin-top:15px;}
+</style>
 </head>
 <body>
-  <h1>Vista previa: Estampa en camiseta blanca</h1>
-  <div class="app">
-    <div class="canvas-wrap">
-      <canvas id="mockup" width="600" height="800"></canvas>
-      <div class="small muted">Arrastra la imagen en el área de estampado, o usa los controles para mover/rotar/escalar.</div>
-    </div>
+<h1>Mockup Interactivo de Camiseta Blanca</h1>
 
-    <div class="controls">
-      <label>Subir imagen para estampar</label>
-      <input id="fileImg" type="file" accept="image/*">
+<canvas id="mockup" width="600" height="800"></canvas>
 
-      <label>Área de impresión (ajustable)</label>
-      <div class="row">
-        <button id="resetArea" class="btn" style="background:#444">Reset área</button>
-        <button id="download" class="btn">Descargar mockup</button>
-      </div>
+<div class="panel">
+  <label>Zona de estampado:</label>
+  <select id="zona">
+    <option value="pecho">Centro del pecho</option>
+    <option value="logo">Logo pequeño (superior)</option>
+    <option value="frontal">Frontal completo</option>
+  </select>
 
-      <label>Escala</label>
-      <input id="scale" type="range" min="0.1" max="3" step="0.01" value="1">
+  <label>Subir imagen:</label>
+  <input type="file" id="fileImg" accept="image/*">
 
-      <label>Rotación (grados)</label>
-      <input id="rotate" type="range" min="-180" max="180" step="1" value="0">
+  <button id="fit">Ajustar dentro</button>
+  <button id="center">Centrar</button>
+  <button id="download">Descargar mockup</button>
+</div>
 
-      <label>Opacidad</label>
-      <input id="opacity" type="range" min="0" max="1" step="0.01" value="1">
-
-      <label>Controles rápidos</label>
-      <div class="row">
-        <button id="fit" class="btn" style="background:#0aa">Ajustar dentro</button>
-        <button id="center" class="btn" style="background:#0aa">Centrar</button>
-      </div>
-
-      <div class="note">Sugerencia: sube una imagen con buena resolución para una mejor estampa. La descarga será una imagen PNG del mockup.</div>
-    </div>
-  </div>
+<div class="control-group">
+  <label>Escala</label>
+  <input type="range" id="scale" min="0.1" max="3" step="0.01" value="1">
+  <label>Rotación</label>
+  <input type="range" id="rotate" min="-180" max="180" step="1" value="0">
+  <label>Opacidad</label>
+  <input type="range" id="opacity" min="0" max="1" step="0.01" value="1">
+</div>
 
 <script>
-const canvas = document.getElementById('mockup');
-const ctx = canvas.getContext('2d');
-const fileImg = document.getElementById('fileImg');
-const scaleInput = document.getElementById('scale');
-const rotateInput = document.getElementById('rotate');
-const opacityInput = document.getElementById('opacity');
-const downloadBtn = document.getElementById('download');
-const fitBtn = document.getElementById('fit');
-const centerBtn = document.getElementById('center');
-const resetAreaBtn = document.getElementById('resetArea');
+const canvas = document.getElementById("mockup");
+const ctx = canvas.getContext("2d");
 
-let printArea = { x: 120, y: 160, w: 360, h: 420 };
-const defaultArea = {...printArea};
+const fileInput = document.getElementById("fileImg");
+const zonaSelect = document.getElementById("zona");
+const scaleInput = document.getElementById("scale");
+const rotateInput = document.getElementById("rotate");
+const opacityInput = document.getElementById("opacity");
+const fitBtn = document.getElementById("fit");
+const centerBtn = document.getElementById("center");
+const downloadBtn = document.getElementById("download");
+
+// Cargar plantilla fija
+const plantilla = new Image();
+plantilla.src = "shirt-white.png"; // asegúrate de que esté en la misma carpeta
+let plantillaCargada = false;
+plantilla.onload = () => {
+  plantillaCargada = true;
+  render();
+};
+
+// Configuraciones de áreas
+const areas = {
+  pecho: {x: 150, y: 250, w: 300, h: 300},
+  logo: {x: 230, y: 180, w: 140, h: 120},
+  frontal: {x: 120, y: 200, w: 360, h: 480}
+};
+
+let printArea = {...areas.pecho};
+
 let img = new Image();
 let imgLoaded = false;
-let imgState = { x: printArea.x + printArea.w/2, y: printArea.y + printArea.h/2, scale:1, rot:0, opacity:1 };
-let dragging = false, dragStart = null;
+let imgState = {x: printArea.x + printArea.w/2, y: printArea.y + printArea.h/2, scale:1, rot:0, opacity:1};
 
-function drawTshirt(){
+function render(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle = '#ffffff';
-  roundRect(ctx, 60, 40, 480, 720, 24, true, false);
-  ctx.fillStyle = '#f7f8fa';
-  roundRect(ctx, 230, 40, 140, 30, 15, true, false);
-  ctx.globalAlpha = 0.06;
-  roundRect(ctx, 60, 680, 480, 40, 20, true, false);
-  ctx.globalAlpha = 1;
+  if(plantillaCargada) ctx.drawImage(plantilla,0,0,canvas.width,canvas.height);
+  drawGuide();
+  drawImage();
 }
 
-function drawPrintAreaGuide(){
+function drawGuide(){
   ctx.save();
-  ctx.strokeStyle = 'rgba(0,0,0,0.12)';
-  ctx.lineWidth = 2;
+  ctx.strokeStyle="rgba(0,0,0,0.2)";
+  ctx.lineWidth=2;
   ctx.setLineDash([6,6]);
   ctx.strokeRect(printArea.x, printArea.y, printArea.w, printArea.h);
   ctx.restore();
 }
 
-function drawImageInArea(){
+function drawImage(){
   if(!imgLoaded) return;
   ctx.save();
-  const r = 8;
-  roundClip(ctx, printArea.x, printArea.y, printArea.w, printArea.h, r);
+  roundClip(ctx, printArea.x, printArea.y, printArea.w, printArea.h, 8);
   ctx.translate(imgState.x, imgState.y);
-  ctx.rotate(imgState.rot * Math.PI/180);
+  ctx.rotate(imgState.rot*Math.PI/180);
   ctx.globalAlpha = imgState.opacity;
-  ctx.drawImage(img, - (img.width * imgState.scale)/2, - (img.height * imgState.scale)/2, img.width*imgState.scale, img.height*imgState.scale);
+  ctx.drawImage(img, -(img.width*imgState.scale)/2, -(img.height*imgState.scale)/2, img.width*imgState.scale, img.height*imgState.scale);
   ctx.globalAlpha = 1;
   ctx.restore();
 }
 
-function render(){
-  drawTshirt();
-  drawPrintAreaGuide();
-  drawImageInArea();
-}
-
-function roundRect(ctx, x, y, w, h, r, fill, stroke){
-  if (typeof r === 'undefined') r = 5;
+function roundClip(ctx,x,y,w,h,r){
   ctx.beginPath();
-  ctx.moveTo(x+r, y);
-  ctx.arcTo(x+w, y, x+w, y+h, r);
-  ctx.arcTo(x+w, y+h, x, y+h, r);
-  ctx.arcTo(x, y+h, x, y, r);
-  ctx.arcTo(x, y, x+w, y, r);
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
   ctx.closePath();
-  if(fill) ctx.fill();
-  if(stroke) ctx.stroke();
+  ctx.clip();
 }
-function roundClip(ctx,x,y,w,h,r){ ctx.save(); roundRect(ctx,x,y,w,h,r,false,false); ctx.clip(); }
 
-fileImg.addEventListener('change', e=>{
+// Subir imagen
+fileInput.addEventListener("change", e=>{
   const f = e.target.files[0];
   if(!f) return;
   const url = URL.createObjectURL(f);
   img = new Image();
   img.onload = ()=>{
     imgLoaded = true;
-    imgState.scale = Math.min(printArea.w / img.width, printArea.h / img.height) * 0.95;
-    imgState.x = printArea.x + printArea.w/2;
-    imgState.y = printArea.y + printArea.h/2;
-    imgState.rot = 0;
-    imgState.opacity = 1;
-    scaleInput.value = imgState.scale;
-    rotateInput.value = 0;
-    opacityInput.value = 1;
-    render();
+    fitImage();
     URL.revokeObjectURL(url);
   };
   img.src = url;
 });
 
-scaleInput.addEventListener('input', ()=>{ imgState.scale = Number(scaleInput.value); render(); });
-rotateInput.addEventListener('input', ()=>{ imgState.rot = Number(rotateInput.value); render(); });
-opacityInput.addEventListener('input', ()=>{ imgState.opacity = Number(opacityInput.value); render(); });
-fitBtn.addEventListener('click', ()=>{ if(!imgLoaded) return; imgState.scale = Math.min(printArea.w / img.width, printArea.h / img.height); scaleInput.value = imgState.scale; render(); });
-centerBtn.addEventListener('click', ()=>{ imgState.x = printArea.x + printArea.w/2; imgState.y = printArea.y + printArea.h/2; render(); });
-resetAreaBtn.addEventListener('click', ()=>{ printArea = {...defaultArea}; render(); });
+function fitImage(){
+  imgState.scale = Math.min(printArea.w / img.width, printArea.h / img.height)*0.95;
+  imgState.x = printArea.x + printArea.w/2;
+  imgState.y = printArea.y + printArea.h/2;
+  render();
+}
 
-downloadBtn.addEventListener('click', ()=>{
-  const link = document.createElement('a');
-  link.download = 'camiseta_mockup.png';
-  link.href = canvas.toDataURL('image/png');
+// Cambiar zona
+zonaSelect.addEventListener("change", ()=>{
+  printArea = {...areas[zonaSelect.value]};
+  imgState.x = printArea.x + printArea.w/2;
+  imgState.y = printArea.y + printArea.h/2;
+  render();
+});
+
+// Controles
+scaleInput.addEventListener("input", ()=>{imgState.scale = Number(scaleInput.value); render();});
+rotateInput.addEventListener("input", ()=>{imgState.rot = Number(rotateInput.value); render();});
+opacityInput.addEventListener("input", ()=>{imgState.opacity = Number(opacityInput.value); render();});
+fitBtn.addEventListener("click", ()=>{fitImage();});
+centerBtn.addEventListener("click", ()=>{
+  imgState.x = printArea.x + printArea.w/2;
+  imgState.y = printArea.y + printArea.h/2;
+  render();
+});
+
+// Descargar
+downloadBtn.addEventListener("click", ()=>{
+  const link = document.createElement("a");
+  link.download = "mockup_camiseta.png";
+  link.href = canvas.toDataURL("image/png");
   link.click();
 });
 
-canvas.addEventListener('mousedown', e=>{
+// Movimiento con el ratón
+let dragging=false, dragStart=null;
+canvas.addEventListener("mousedown", e=>{
   if(!imgLoaded) return;
-  const pos = getMousePos(canvas,e);
-  if(pointInRect(pos, printArea)){
-    dragging = true;
-    dragStart = {x: pos.x - imgState.x, y: pos.y - imgState.y};
-  }
+  const pos = getMousePos(e);
+  if(pointInRect(pos,printArea)){dragging=true; dragStart={x:pos.x-imgState.x,y:pos.y-imgState.y};}
 });
-window.addEventListener('mousemove', e=>{
+window.addEventListener("mousemove", e=>{
   if(!dragging) return;
-  const pos = getMousePos(canvas,e);
+  const pos = getMousePos(e);
   imgState.x = pos.x - dragStart.x;
   imgState.y = pos.y - dragStart.y;
   render();
 });
-window.addEventListener('mouseup', ()=>{ dragging = false; dragStart = null; });
+window.addEventListener("mouseup", ()=>{dragging=false; dragStart=null;});
 
-canvas.addEventListener('touchstart', e=>{
-  if(!imgLoaded) return;
-  const t = e.touches[0];
-  const pos = getTouchPos(canvas,t);
-  if(pointInRect(pos, printArea)){
-    dragging=true;
-    dragStart = {x: pos.x - imgState.x, y: pos.y - imgState.y};
-  }
-});
-canvas.addEventListener('touchmove', e=>{
-  if(!dragging) return;
-  const t = e.touches[0];
-  const pos = getTouchPos(canvas,t);
-  imgState.x = pos.x - dragStart.x;
-  imgState.y = pos.y - dragStart.y;
-  render();
-  e.preventDefault();
-});
-canvas.addEventListener('touchend', ()=>{ dragging=false; dragStart=null; });
-
-function pointInRect(p, rect){ return p.x >= rect.x && p.x <= rect.x+rect.w && p.y >= rect.y && p.y <= rect.y+rect.h; }
-function getMousePos(canvas, evt){ const rect = canvas.getBoundingClientRect(); return { x: (evt.clientX - rect.left) * (canvas.width/rect.width), y: (evt.clientY - rect.top) * (canvas.height/rect.height) }; }
-function getTouchPos(canvas, touch){ const rect = canvas.getBoundingClientRect(); return { x: (touch.clientX - rect.left) * (canvas.width/rect.width), y: (touch.clientY - rect.top) * (canvas.height/rect.height) }; }
+function getMousePos(evt){
+  const rect = canvas.getBoundingClientRect();
+  return {x:(evt.clientX-rect.left)*(canvas.width/rect.width), y:(evt.clientY-rect.top)*(canvas.height/rect.height)};
+}
+function pointInRect(p, rect){return p.x>=rect.x && p.x<=rect.x+rect.w && p.y>=rect.y && p.y<=rect.y+rect.h;}
 
 render();
 </script>
