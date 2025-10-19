@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landing | Dr-Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand: #0ea5e9;
+      --brand-dark: #0284c7;
+      --text: #0f172a;
+      --muted: #64748b;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --ring: rgba(14,165,233,0.35);
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; color: var(--text); background: var(--bg); }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* Header / Navbar */
+    header {
+      background: #ffffffcc;
+      backdrop-filter: saturate(180%) blur(8px);
+      position: sticky; top: 0; z-index: 50;
+      border-bottom: 1px solid var(--border);
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between; height: 64px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+    .brand-logo { width: 36px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, var(--brand), var(--brand-dark)); }
+    .nav-actions { display: flex; gap: 10px; }
+    .btn {
+      padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border); background: #fff; color: var(--text); font-weight: 600; cursor: pointer;
+      transition: all .2s ease; display: inline-flex; align-items: center; justify-content: center;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 16px -8px rgba(2,8,23,.15); }
+    .btn-primary { background: var(--brand); color: white; border-color: transparent; }
+    .btn-primary:hover { background: var(--brand-dark); }
+
+    /* Hero Carousel */
+    .hero { position: relative; }
+    .carousel { position: relative; width: 100%; height: clamp(280px, 55vh, 520px); overflow: hidden; border-bottom: 1px solid var(--border); }
+    .slide { position: absolute; inset: 0; opacity: 0; transition: opacity .6s ease; }
+    .slide.active { opacity: 1; }
+    .slide img { width: 100%; height: 100%; object-fit: cover; }
+    .carousel-dots { position: absolute; bottom: 14px; left: 0; right: 0; display: flex; justify-content: center; gap: 8px; }
+    .dot { width: 8px; height: 8px; border-radius: 999px; background: #ffffff88; border: 1px solid #ffffffcc; }
+    .dot.active { width: 20px; background: #fff; }
+
+    /* Sections */
+    section { padding: 48px 0; }
+    .section-title { font-size: 28px; margin: 0 0 10px; }
+    .section-sub { color: var(--muted); margin: 0 0 28px; }
+
+    .cards { display: grid; grid-template-columns: repeat(1, 1fr); gap: 16px; }
+    @media (min-width: 700px) { .cards { grid-template-columns: repeat(3, 1fr); } }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; box-shadow: 0 8px 20px -14px rgba(2,8,23,.25); }
+    .card h3 { margin: 0 0 6px; }
+    .card p { margin: 0; color: var(--muted); }
+    .card-img { width: 100%; height: 140px; border-radius: 10px; background: #e2e8f0; margin-bottom: 12px; display: grid; place-items: center; color: #475569; font-weight: 600; }
+
+    /* Features 3 columns */
+    .features { display: grid; grid-template-columns: repeat(1, 1fr); gap: 16px; }
+    @media (min-width: 900px) { .features { grid-template-columns: repeat(3, 1fr); } }
+    .feature { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; display: flex; gap: 14px; align-items: center; }
+    .feature .icon { width: 60px; height: 60px; border-radius: 12px; background: linear-gradient(135deg, #e2e8f0, #f1f5f9); display: grid; place-items: center; font-size: 26px; }
+    .feature h4 { margin: 0 0 4px; }
+    .feature p { margin: 0; color: var(--muted); }
+
+    /* Contact form */
+    .contact { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    @media (min-width: 900px) { .contact { grid-template-columns: 1fr 1fr; } }
+    form { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; }
+    .field { margin-bottom: 14px; }
+    label { display: block; font-weight: 600; margin-bottom: 6px; }
+    input, select, textarea { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: #fff; font: inherit; }
+    input:focus, select:focus, textarea:focus { outline: none; box-shadow: 0 0 0 4px var(--ring); border-color: var(--brand); }
+    textarea { min-height: 110px; resize: vertical; }
+
+    /* Footer */
+    footer { margin-top: 48px; background: #0b1220; color: #cbd5e1; }
+    .footer-inner { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 18px 0; }
+    .footer-brand { display: flex; align-items: center; gap: 10px; }
+    .footer-logo { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--brand), var(--brand-dark)); }
+    .copyright { color: #94a3b8; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="brand-logo" aria-hidden="true"></div>
+        <span>Dr‑Market</span>
+      </div>
+      <nav class="nav-actions" aria-label="Principal">
+        <a class="btn" href="#inicio">Inicio</a>
+        <a class="btn" href="producto.html">Productos</a>
+        <a class="btn" href="#servicios">Servicios</a>
+        <a class="btn btn-primary" href="nosotros.html">Nosotros</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="inicio" class="hero">
+    <div class="carousel" aria-label="Anuncios">
+      <div class="slide active" role="img" aria-label="Anuncio 1">
+        <img src="img/slide-1.jpg" alt="Anuncio destacado 1">
+      </div>
+      <div class="slide" role="img" aria-label="Anuncio 2">
+        <img src="img/slide-2.jpg" alt="Anuncio destacado 2">
+      </div>
+      <div class="slide" role="img" aria-label="Anuncio 3">
+        <img src="img/slide-3.jpg" alt="Anuncio destacado 3">
+      </div>
+      <div class="carousel-dots" aria-hidden="true">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+
+    <section id="servicios">
+      <div class="container">
+        <h2 class="section-title">Top Servicios</h2>
+        <p class="section-sub">Los preferidos por nuestros clientes</p>
+        <div class="cards">
+          <article class="card">
+            <div class="card-img">Servicio 1</div>
+            <h3>Personalización Premium</h3>
+            <p>Diseños a medida con acabados de alta calidad.</p>
+          </article>
+          <article class="card">
+            <div class="card-img">Servicio 2</div>
+            <h3>Impresión Express</h3>
+            <p>Producción rápida sin sacrificar la excelencia.</p>
+          </article>
+          <article class="card">
+            <div class="card-img">Servicio 3</div>
+            <h3>Asesoría Creativa</h3>
+            <p>Te acompañamos para lograr el mejor resultado.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <h2 class="section-title">Por qué elegirnos</h2>
+        <p class="section-sub">Comprometidos con tu satisfacción</p>
+        <div class="features">
+          <div class="feature">
+            <div class="icon">🚚</div>
+            <div>
+              <h4>Envíos rápidos</h4>
+              <p>Entregas puntuales a todo el país.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="icon">✅</div>
+            <div>
+              <h4>Calidad garantizada</h4>
+              <p>Materiales y procesos certificados.</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="icon">💬</div>
+            <div>
+              <h4>WhatsApp 24/7</h4>
+              <p>Atención inmediata cuando la necesites.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contacto">
+      <div class="container contact">
+        <div>
+          <h2 class="section-title">Contáctanos</h2>
+          <p class="section-sub">Cuéntanos tu idea y te responderemos pronto</p>
+          <form action="#" method="post">
+            <div class="field">
+              <label for="nombre">Nombre</label>
+              <input id="nombre" name="nombre" type="text" placeholder="Tu nombre" required>
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" placeholder="tucorreo@ejemplo.com" required>
+            </div>
+            <div class="field">
+              <label for="producto">Interesado en</label>
+              <select id="producto" name="producto" required>
+                <option value="" disabled selected>Selecciona una opción</option>
+                <option value="camisas">Camisas</option>
+                <option value="cucos">Cucos</option>
+                <option value="gorras-neritos">Gorras de ñeritos</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="mensaje">Mensaje</label>
+              <textarea id="mensaje" name="mensaje" placeholder="Cuéntanos más…"></textarea>
+            </div>
+            <button class="btn btn-primary" type="submit">Enviar</button>
+          </form>
+        </div>
+        <div>
+          <div class="card">
+            <h3>Información</h3>
+            <p>Atendemos pedidos mayoristas y personalizados. Escríbenos para una cotización rápida.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo" aria-hidden="true"></div>
+        <strong>Dr‑Market</strong>
+      </div>
+      <div class="copyright">© <span id="year"></span> Dr‑Market. Todos los derechos reservados.</div>
+    </div>
+  </footer>
+
+  <script>
+    // Carousel auto-advance every 3 seconds
+    (function() {
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const dots = Array.from(document.querySelectorAll('.dot'));
+      if (!slides.length) return;
+      let index = 0;
+      function show(i) {
+        slides.forEach((s, n) => s.classList.toggle('active', n === i));
+        dots.forEach((d, n) => d.classList.toggle('active', n === i));
+      }
+      function next() { index = (index + 1) % slides.length; show(index); }
+      setInterval(next, 3000);
+    })();
+
+    // Footer year
+    (function() {
+      const y = document.getElementById('year');
+      if (y) y.textContent = new Date().getFullYear();
+    })();
+  </script>
+</body>
+</html>
+
+
