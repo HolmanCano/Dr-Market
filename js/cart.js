@@ -1,17 +1,72 @@
 (function(){
   const STORAGE_KEY = 'cartItems';
+  const FALLBACK_PREFIX = '__drm_market_cart__=';
+
+  function parseArray(input){
+    if (input == null || input === '') return null;
+    try {
+      const parsed = JSON.parse(input);
+      return Array.isArray(parsed) ? parsed : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function readFromLocal(){
+    try { return localStorage.getItem(STORAGE_KEY); } catch { return null; }
+  }
+
+  function writeToLocal(items){
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function readFromFallback(){
+    if (!window.name || !window.name.startsWith(FALLBACK_PREFIX)) return null;
+    return parseArray(window.name.slice(FALLBACK_PREFIX.length));
+  }
+
+  function writeToFallback(items){
+    try {
+      window.name = FALLBACK_PREFIX + JSON.stringify(items);
+    } catch {
+      /* ignore */
+    }
+  }
 
   function readItems(){
-    try { const v = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); return Array.isArray(v) ? v : []; } catch { return []; }
+    const localValue = parseArray(readFromLocal());
+    if (localValue !== null) {
+      writeToFallback(localValue);
+      return localValue;
+    }
+
+    const fallbackValue = readFromFallback();
+    if (fallbackValue !== null) {
+      writeToLocal(fallbackValue);
+      return fallbackValue;
+    }
+    return [];
   }
-  function writeItems(items){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    notifyChange(items);
-  }
+
   function notifyChange(items){
     const snapshot = Array.isArray(items) ? items : readItems();
     updateBadge(snapshot);
     window.dispatchEvent(new CustomEvent('cart:change', { detail: { items: snapshot } }));
+  }
+
+  function writeItems(items){
+    const list = Array.isArray(items) ? items : [];
+    writeToFallback(list);
+    if (!writeToLocal(list)) {
+      // ensure badge updates even if localStorage is unavailable
+      updateBadge(list);
+    }
+    notifyChange(list);
   }
 
   function formatPrice(n, currency='EUR'){ return new Intl.NumberFormat('es-ES', { style: 'currency', currency }).format(n); }
@@ -22,8 +77,13 @@
   function updateBadge(items){
     const source = Array.isArray(items) ? items : readItems();
     const count = totalCount(source);
-    const el = document.getElementById('cart-count');
-    if (el) el.textContent = String(count);
+    const targets = document.querySelectorAll('[data-cart-count]');
+    if (!targets.length){
+      const legacy = document.getElementById('cart-count');
+      if (legacy) legacy.textContent = String(count);
+      return;
+    }
+    targets.forEach((node)=>{ node.textContent = String(count); });
   }
 
   function addListener(cb){
