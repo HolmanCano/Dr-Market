@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagar | Dr-Market</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/landing-theme.css">
+    <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=EUR"></script>
+  </head>
+  <body>
+    <header>
+      <div class="container nav">
+        <div class="brand">
+          <div class="brand-logo" aria-hidden="true"></div>
+          <span>Dr'Market</span>
+        </div>
+        <nav class="nav-actions" aria-label="Principal">
+          <a class="btn" href="landing.html#inicio">Inicio</a>
+          <a class="btn" href="index.html">Tienda</a>
+          <a class="btn" href="nosotros.html">Nosotros</a>
+          <a class="btn" href="carrito.html" aria-label="Carrito">🛒 <span id="cart-count" aria-live="polite">0</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="surface-block">
+        <h1 class="section-title">Finalizar compra</h1>
+        <p class="section-sub">Pagar de forma segura con PayPal.</p>
+
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap">
+            <div>
+              <div style="opacity:.75">Total a pagar</div>
+              <div id="total" style="font-size:22px; font-weight:700">0,00 €</div>
+            </div>
+            <a class="btn" href="carrito.html">Volver al carrito</a>
+          </div>
+          <div id="paypal-button-container" style="margin-top:16px"></div>
+          <div id="status" style="margin-top:10px"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="footer-logo" aria-hidden="true"></div>
+          <span>Dr'Market</span>
+        </div>
+        <p>&copy; 2024 Dr'Market. Todos los derechos reservados.</p>
+        <a href="mailto:hola@drmarket.com">hola@drmarket.com</a>
+      </div>
+    </footer>
+
+    <script src="js/cart.js"></script>
+    <script>
+      (function(){
+        const currency = 'EUR';
+        const totalEl = document.getElementById('total');
+        const status = document.getElementById('status');
+
+        function renderTotal(){ totalEl.textContent = window.cartManager.formatPrice(window.cartManager.getTotalPrice()); }
+        renderTotal();
+        window.cartManager.addListener(renderTotal);
+
+        if (typeof paypal === 'undefined') {
+          status.textContent = 'No se pudo cargar PayPal. Recarga la página.';
+          return;
+        }
+
+        paypal.Buttons({
+          style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' },
+          createOrder: function(data, actions) {
+            const amount = window.cartManager.getTotalPrice();
+            return actions.order.create({
+              purchase_units: [{ amount: { value: amount.toFixed(2), currency_code: currency } }]
+            });
+          },
+          onApprove: async function(data, actions) {
+            try {
+              const details = await actions.order.capture();
+              status.textContent = `Pago realizado por ${details.payer.name.given_name}. ¡Gracias!`;
+              window.cartManager.clearCart();
+            } catch (err) {
+              console.error(err);
+              status.textContent = 'Ocurrió un error al procesar el pago.';
+            }
+          },
+          onError: function(err){
+            console.error(err);
+            status.textContent = 'Ocurrió un error al procesar el pago.';
+          }
+        }).render('#paypal-button-container');
+      })();
+    </script>
+  </body>
+  <script src="js/cart.js"></script>
+</html>
+
+

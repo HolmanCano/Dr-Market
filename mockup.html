@@ -16,9 +16,11 @@
   button:hover {background:#0b66ff; color:white; border-color:#0b66ff;}
   label {display:block; font-size:13px; margin-top:10px;}
   .control-group {max-width:400px; margin-top:15px;}
+  .cart-fab {position:fixed; top:12px; right:12px; background:#0b66ff; color:#fff; text-decoration:none; padding:8px 12px; border-radius:8px;}
 </style>
 </head>
 <body>
+<a class="cart-fab" href="carrito.html" aria-label="Carrito">🛒 <span id="cart-count" aria-live="polite">0</span></a>
 <h1>Mockup Interactivo de Camiseta Blanca</h1>
 
 <canvas id="mockup" width="600" height="800"></canvas>
@@ -195,4 +197,14 @@ function pointInRect(p, rect){return p.x>=rect.x && p.x<=rect.x+rect.w && p.y>=r
 render();
 </script>
 </body>
+<script>
+  (function(){
+    function items(){ try { return JSON.parse(localStorage.getItem('cartItems')||'[]'); } catch { return []; } }
+    function count(){ return items().reduce((a,i)=>a+Number(i.quantity||1),0); }
+    const el = document.getElementById('cart-count');
+    if (el) el.textContent = String(count());
+    window.updateCartCount = function(){ const el = document.getElementById('cart-count'); if (el) el.textContent = String(count()); };
+  })();
+</script>
+<script src="js/cart.js"></script>
 </html>

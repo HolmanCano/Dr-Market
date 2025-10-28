@@ -19,8 +19,8 @@
         <nav class="nav-actions" aria-label="Principal">
           <a class="btn" href="landing.html#inicio">Inicio</a>
           <a class="btn" href="index.html">Tienda</a>
-          <a class="btn" href="producto.html">Producto</a>
           <a class="btn" href="nosotros.html" aria-current="page">Nosotros</a>
+          <a class="btn" href="carrito.html" aria-label="Carrito">🛒 <span id="cart-count" aria-live="polite">0</span></a>
         </nav>
       </div>
     </header>
@@ -109,5 +109,15 @@
         <a href="mailto:hola@drmarket.com">hola@drmarket.com</a>
       </div>
     </footer>
+  <script>
+    (function(){
+      function items(){ try { return JSON.parse(localStorage.getItem('cartItems')||'[]'); } catch { return []; } }
+      function count(){ return items().reduce((a,i)=>a+Number(i.quantity||1),0); }
+      const el = document.getElementById('cart-count');
+      if (el) el.textContent = String(count());
+      window.updateCartCount = function(){ const el = document.getElementById('cart-count'); if (el) el.textContent = String(count()); };
+    })();
+  </script>
+  <script src="js/cart.js"></script>
   </body>
 </html>

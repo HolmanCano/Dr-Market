@@ -19,8 +19,8 @@
         <nav class="nav-actions" aria-label="Principal">
           <a class="btn" href="landing.html#inicio">Inicio</a>
           <a class="btn" href="index.html">Tienda</a>
-          <a class="btn" href="producto.html" aria-current="page">Producto</a>
           <a class="btn" href="nosotros.html">Nosotros</a>
+          <a class="btn" href="carrito.html" aria-label="Carrito">🛒 <span id="cart-count" aria-live="polite">0</span></a>
         </nav>
       </div>
     </header>
@@ -29,12 +29,12 @@
       <section class="surface-block">
         <div class="product-detail">
           <figure>
-            <img src="img/modelo-3.svg" alt="Camiseta React JS azul">
+            <img id="product-image" src="img/modelo-3.svg" alt="Producto seleccionado">
           </figure>
           <div>
-            <h1 class="section-title">React JS Limited Edition</h1>
-            <p class="section-sub">Camiseta unisex 100&nbsp;% algod&oacute;n org&aacute;nico con estampado en serigraf&iacute;a japonesa. Suavidad premium y durabilidad pensada para el uso diario.</p>
-            <div class="price">25&nbsp;&euro;</div>
+            <h1 id="product-name" class="section-title">Producto</h1>
+            <p class="section-sub">Camiseta unisex 100&nbsp;% algod&oacute;n org&aacute;nico con estampado premium.</p>
+            <div class="price" id="product-price">25&nbsp;&euro;</div>
             <div class="badges">
               <span class="badge">Corte unisex</span>
               <span class="badge">Edici&oacute;n 2024</span>
@@ -96,4 +96,30 @@
       </div>
     </footer>
   </body>
+  <script src="js/cart.js"></script>
+  <script>
+    (function(){
+      const form = document.querySelector('.form');
+      if (!form) return;
+      // Datos desde URL
+      const params = window.cartManager.parseUrlParams();
+      if (params.name) { const n = document.getElementById('product-name'); if (n) n.textContent = params.name; }
+      if (typeof params.price === 'number') { const p = document.getElementById('product-price'); if (p) p.innerHTML = `${params.price.toFixed(2)}&nbsp;€`; }
+      if (params.image) { const img = document.getElementById('product-image'); if (img) img.setAttribute('src', params.image); }
+
+      form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const name = document.getElementById('product-name')?.textContent?.trim() || 'Producto';
+        const priceText = document.getElementById('product-price')?.textContent || '0';
+        const match = priceText.replace(/\s/g,'').match(/([0-9]+(?:[\.,][0-9]+)?)/);
+        const price = match ? Number(match[1].replace(',','.')) : 0;
+        const quantity = Math.max(1, Number(document.getElementById('cantidad')?.value || 1));
+        const size = document.getElementById('talla')?.value || '';
+        const image = document.getElementById('product-image')?.getAttribute('src') || '';
+
+        window.cartManager.addItem({ name, price, quantity, size, image });
+        window.location.href = 'carrito.html';
+      });
+    })();
+  </script>
 </html>

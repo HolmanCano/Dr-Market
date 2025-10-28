@@ -19,9 +19,11 @@
         <nav class="nav-actions" aria-label="Principal">
           <a class="btn" href="#inicio" aria-current="page">Inicio</a>
           <a class="btn" href="index.html">Tienda</a>
-          <a class="btn" href="producto.html">Producto</a>
           <a class="btn" href="nosotros.html">Nosotros</a>
           <a class="btn btn-primary" href="#contacto">Contacto</a>
+          <a class="btn" href="carrito.html" aria-label="Carrito">
+            🛒 <span id="cart-count" aria-live="polite">0</span>
+          </a>
         </nav>
       </div>
     </header>
@@ -182,6 +184,17 @@
         const year = document.getElementById("year");
         if (year) year.textContent = new Date().getFullYear();
       })();
+
+      (function () {
+        function items(){
+          try { return JSON.parse(localStorage.getItem('cartItems')||'[]'); } catch { return []; }
+        }
+        function count(){ return items().reduce((a,i)=>a+Number(i.quantity||1),0); }
+        const el = document.getElementById('cart-count');
+        if (el) el.textContent = String(count());
+        window.updateCartCount = function(){ const el = document.getElementById('cart-count'); if (el) el.textContent = String(count()); };
+      })();
     </script>
+    <script src="js/cart.js"></script>
   </body>
 </html>

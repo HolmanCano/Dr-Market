@@ -19,8 +19,8 @@
         <nav class="nav-actions" aria-label="Principal">
           <a class="btn" href="landing.html#inicio">Inicio</a>
           <a class="btn" href="index.html" aria-current="page">Tienda</a>
-          <a class="btn" href="producto.html">Producto</a>
           <a class="btn" href="nosotros.html">Nosotros</a>
+          <a class="btn" href="carrito.html" aria-label="Carrito">🛒 <span id="cart-count" aria-live="polite">0</span></a>
         </nav>
       </div>
     </header>
@@ -47,72 +47,72 @@
         <h2 class="section-title">Nuestros Productos</h2>
         <p class="section-sub">Selecciona tu favorito y personal&iacute;zalo con tu marca o evento.</p>
         <div class="cards product-grid">
-          <a class="card" href="producto.html">
+          <a class="card" href="producto.html?name=VueJS&price=25&image=img/modelo-1.svg">
             <img src="img/modelo-1.svg" alt="Camiseta VueJS">
             <span class="product-name">VueJS</span>
             <span class="product-price">25&nbsp;&euro;</span>
           </a>
-          <a class="card" href="producto.html">
+          <a class="card" href="producto.html?name=AngularJS&price=25&image=img/modelo-2.svg">
             <img src="img/modelo-2.svg" alt="Camiseta AngularJS">
             <span class="product-name">AngularJS</span>
             <span class="product-price">25&nbsp;&euro;</span>
           </a>
-          <a class="card" href="producto.html">
+          <a class="card" href="producto.html?name=ReactJS&price=25&image=img/modelo-3.svg">
             <img src="img/modelo-3.svg" alt="Camiseta ReactJS">
             <span class="product-name">ReactJS</span>
             <span class="product-price">25&nbsp;&euro;</span>
           </a>
-          <a class="card" href="producto.html">
+          <a class="card" href="producto.html?name=Redux&price=25&image=img/modelo-4.svg">
             <img src="img/modelo-4.svg" alt="Camiseta Redux">
             <span class="product-name">Redux</span>
             <span class="product-price">25&nbsp;&euro;</span>
           </a>
-          <a class="card" href="producto.html">
+          <a class="card" href="producto.html?name=Node.js&price=25&image=img/modelo-5.svg">
             <img src="img/modelo-5.svg" alt="Camiseta Node.js">
             <span class="product-name">Node.js</span>
             <span class="product-price">25&nbsp;&euro;</span>
           </a>
-          <a class="card" href="producto.html">
+          <a class="card" href="producto.html?name=SASS&price=25&image=img/modelo-6.svg">
             <img src="img/modelo-6.svg" alt="Camiseta SASS">
             <span class="product-name">SASS</span>
             <span class="product-price">25&nbsp;&euro;</span>
           </a>
-          <a class="card" href="producto.html">
+          <a class="card" href="producto.html?name=HTML5&price=25&image=img/modelo-7.svg">
             <img src="img/modelo-7.svg" alt="Camiseta HTML5">
             <span class="product-name">HTML5</span>
             <span class="product-price">25&nbsp;&euro;</span>
           </a>
-          <a class="card" href="producto.html">
+          <a class="card" href="producto.html?name=GitHub&price=25&image=img/modelo-8.svg">
             <img src="img/modelo-8.svg" alt="Camiseta GitHub">
             <span class="product-name">GitHub</span>
             <span class="product-price">25&nbsp;&euro;</span>
           </a>
-          <a class="card" href="producto.html">
+          <a class="card" href="producto.html?name=BulmaCSS&price=25&image=img/modelo-9.svg">
             <img src="img/modelo-9.svg" alt="Camiseta BulmaCSS">
             <span class="product-name">BulmaCSS</span>
             <span class="product-price">25&nbsp;&euro;</span>
           </a>
-          <a class="card" href="producto.html">
+          <a class="card" href="producto.html?name=TypeScript&price=25&image=img/modelo-10.svg">
             <img src="img/modelo-10.svg" alt="Camiseta TypeScript">
             <span class="product-name">TypeScript</span>
             <span class="product-price">25&nbsp;&euro;</span>
           </a>
-          <a class="card" href="producto.html">
+          <a class="card" href="producto.html?name=Drupal&price=25&image=img/modelo-11.svg">
             <img src="img/modelo-11.svg" alt="Camiseta Drupal">
             <span class="product-name">Drupal</span>
             <span class="product-price">25&nbsp;&euro;</span>
           </a>
-          <a class="card" href="producto.html">
+          <a class="card" href="producto.html?name=JavaScript&price=25&image=img/modelo-12.svg">
             <img src="img/modelo-12.svg" alt="Camiseta JavaScript">
             <span class="product-name">JavaScript</span>
             <span class="product-price">25&nbsp;&euro;</span>
           </a>
-          <a class="card" href="producto.html">
+          <a class="card" href="producto.html?name=GraphQL&price=25&image=img/modelo-13.svg">
             <img src="img/modelo-13.svg" alt="Camiseta GraphQL">
             <span class="product-name">GraphQL</span>
             <span class="product-price">25&nbsp;&euro;</span>
           </a>
-          <a class="card" href="producto.html">
+          <a class="card" href="producto.html?name=WordPress&price=25&image=img/modelo-14.svg">
             <img src="img/modelo-14.svg" alt="Camiseta WordPress">
             <span class="product-name">WordPress</span>
             <span class="product-price">25&nbsp;&euro;</span>
@@ -158,5 +158,15 @@
         <a href="mailto:hola@drmarket.com">hola@drmarket.com</a>
       </div>
     </footer>
+  <script>
+    (function(){
+      function items(){ try { return JSON.parse(localStorage.getItem('cartItems')||'[]'); } catch { return []; } }
+      function count(){ return items().reduce((a,i)=>a+Number(i.quantity||1),0); }
+      const el = document.getElementById('cart-count');
+      if (el) el.textContent = String(count());
+      window.updateCartCount = function(){ const el = document.getElementById('cart-count'); if (el) el.textContent = String(count()); };
+    })();
+  </script>
+  <script src="js/cart.js"></script>
   </body>
 </html>

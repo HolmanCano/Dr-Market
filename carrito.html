@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito | Dr-Market</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/landing-theme.css">
+  </head>
+  <body>
+    <header>
+      <div class="container nav">
+        <div class="brand">
+          <div class="brand-logo" aria-hidden="true"></div>
+          <span>Dr'Market</span>
+        </div>
+        <nav class="nav-actions" aria-label="Principal">
+          <a class="btn" href="landing.html#inicio">Inicio</a>
+          <a class="btn" href="index.html">Tienda</a>
+          <a class="btn" href="nosotros.html">Nosotros</a>
+          <a class="btn btn-primary" href="carrito.html" aria-current="page" aria-label="Carrito">🛒 <span id="cart-count" aria-live="polite">0</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="surface-block">
+        <h1 class="section-title">Tu carrito</h1>
+        <p class="section-sub">Revisa tus productos antes de pagar.</p>
+
+        <div id="cart-empty" class="card" style="display:none">
+          <p>No tienes productos en el carrito.</p>
+          <a class="btn btn-primary" href="index.html">Ir a la tienda</a>
+        </div>
+
+        <div id="cart" class="cards" style="gap:16px;"></div>
+
+        <div id="summary" class="card" style="margin-top:16px; display:none">
+          <h3>Resumen</h3>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px">
+            <span>Total</span>
+            <strong id="total">0,00 €</strong>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:12px">
+            <a class="btn" href="index.html">Seguir comprando</a>
+            <a class="btn btn-primary" href="pago.html">Ir a pagar</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="footer-logo" aria-hidden="true"></div>
+          <span>Dr'Market</span>
+        </div>
+        <p>&copy; 2024 Dr'Market. Todos los derechos reservados.</p>
+        <a href="mailto:hola@drmarket.com">hola@drmarket.com</a>
+      </div>
+    </footer>
+
+    <script src="js/cart.js"></script>
+    <script>
+      (function(){
+        const cartContainer = document.getElementById('cart');
+        const empty = document.getElementById('cart-empty');
+        const summary = document.getElementById('summary');
+        const totalEl = document.getElementById('total');
+
+        function render(){
+          const items = window.cartManager.getItems();
+          cartContainer.innerHTML = '';
+          if (!items.length){
+            empty.style.display = '';
+            summary.style.display = 'none';
+            totalEl.textContent = window.cartManager.formatPrice(0);
+            return;
+          }
+          empty.style.display = 'none';
+          summary.style.display = '';
+
+          items.forEach((item)=>{
+            const line = Number(item.price||0) * Number(item.quantity||1);
+            const card = document.createElement('article');
+            card.className = 'card';
+            card.style.display = 'grid';
+            card.style.gridTemplateColumns = '80px 1fr auto';
+            card.style.alignItems = 'center';
+            card.style.gap = '12px';
+            card.innerHTML = `
+              <div style="width:80px;height:80px;background:#f2f2f2;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden">
+                ${item.image ? `<img src="${item.image}" alt="${item.name || 'Producto'}" style="max-width:100%;max-height:100%">` : '<div class="icon">IMG</div>'}
+              </div>
+              <div>
+                <div style="font-weight:600">${item.name || 'Producto'}</div>
+                <div style="opacity:0.7">${window.cartManager.formatPrice(Number(item.price||0))} &times; 
+                  <input type="number" min="1" value="${Number(item.quantity||1)}" data-id="${item.id}" class="qty" style="width:64px; margin-left:6px">
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:end;gap:8px">
+                <strong>${window.cartManager.formatPrice(line)}</strong>
+                <button class="btn" data-remove="${item.id}">Quitar</button>
+              </div>
+            `;
+            cartContainer.appendChild(card);
+          });
+
+          totalEl.textContent = window.cartManager.formatPrice(window.cartManager.getTotalPrice());
+
+          cartContainer.querySelectorAll('.qty').forEach(input => {
+            input.addEventListener('change', (e)=>{
+              const id = e.target.getAttribute('data-id');
+              const val = Math.max(1, Number(e.target.value || 1));
+              window.cartManager.updateQuantity(id, val);
+              render();
+            });
+          });
+
+          cartContainer.querySelectorAll('button[data-remove]').forEach(btn => {
+            btn.addEventListener('click', (e)=>{
+              const id = e.target.getAttribute('data-remove');
+              window.cartManager.removeItem(id);
+              render();
+            });
+          });
+        }
+
+        render();
+        window.cartManager.addListener(render);
+      })();
+    </script>
+  </body>
+</html>
+
+
