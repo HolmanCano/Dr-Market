@@ -246,6 +246,12 @@ main {
   width: fit-content;
 }
 
+#cart .btn,
+#summary .btn {
+  /* Color específico para los botones en la página de carrito */
+  color: #4e70df;
+}
+
 .surface-block.compact {
   padding: clamp(20px, 5vw, 32px);
 }
