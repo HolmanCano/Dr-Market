@@ -64,10 +64,15 @@ header {
 }
 
 .brand-logo {
+  display: block;
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.3));
+  background-image: url("../img/Logos/Dr. Market .png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: rgba(255, 255, 255, 0.12);
 }
 
 .brand span {
@@ -678,10 +683,21 @@ footer {
 }
 
 .footer-logo {
+  display: block;
   width: 32px;
   height: 32px;
   border-radius: 10px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2));
+  background-image: url("../img/Logos/Dr. Market .png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.brand:focus-visible,
+.footer-brand:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
 }
 
 footer a {
