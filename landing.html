@@ -36,21 +36,8 @@
 
     <main id="inicio">
       <section class="surface-block hero-section">
-        <div class="carousel" aria-label="Colecci&oacute;n destacada">
-          <div class="slide active" role="img" aria-label="Proceso de serigraf&iacute;a en Dr-Market">
-            <img src="img/slide-1.png" alt="Equipo de Dr-Market serigrafiando camisetas personalizadas">
-          </div>
-          <div class="slide" role="img" aria-label="Textiles personalizados para eventos corporativos">
-            <img src="img/slide-2.png" alt="Colecci&oacute;n de camisetas personalizadas para eventos">
-          </div>
-          <div class="slide" role="img" aria-label="Entrega de merchandising premium">
-            <img src="img/slide-3.png" alt="Entrega de productos personalizados de Dr-Market">
-          </div>
-          <div class="carousel-dots" aria-hidden="true">
-            <div class="dot active"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
-          </div>
+        <div class="carousel" aria-label="Colecci&oacute;n destacada" data-carousel>
+          <div class="carousel-dots" data-carousel-dots aria-hidden="true"></div>
         </div>
         <div class="hero-copy">
           <h1 class="section-title">Personalizaci&oacute;n textil a otro nivel</h1>
@@ -196,21 +183,121 @@
       </div>
     </footer>
 
+    <script src="js/assets.js"></script>
     <script>
       (function () {
-        const slides = Array.from(document.querySelectorAll(".slide"));
-        const dots = Array.from(document.querySelectorAll(".dot"));
-        if (!slides.length) return;
+        const carousel = document.querySelector("[data-carousel]");
+        if (!carousel) return;
+        const images = Array.isArray(window.siteAssets?.banners)
+          ? window.siteAssets.banners.filter(Boolean)
+          : [];
+        if (!images.length) return;
+
+        const dotsContainer =
+          carousel.querySelector("[data-carousel-dots]") ||
+          (() => {
+            const el = document.createElement("div");
+            el.className = "carousel-dots";
+            el.setAttribute("data-carousel-dots", "");
+            el.setAttribute("aria-hidden", "true");
+            carousel.appendChild(el);
+            return el;
+          })();
+
+        const slides = [];
+        const dots = [];
+        const slideFragment = document.createDocumentFragment();
+        const dotsFragment = document.createDocumentFragment();
+
+        images.forEach((src, idx) => {
+          const labelFromName = src
+            .split("/")
+            .pop()
+            ?.replace(/\.[^.]+$/, "")
+            .replace(/[-_]+/g, " ")
+            .trim();
+          const label = labelFromName
+            ? `Banner ${idx + 1}: ${labelFromName}`
+            : `Banner ${idx + 1}`;
+
+          const slide = document.createElement("div");
+          slide.className = "slide";
+          if (idx === 0) slide.classList.add("active");
+          slide.setAttribute("role", "img");
+          slide.setAttribute("aria-label", label);
+
+          const img = document.createElement("img");
+          img.src = src;
+          img.alt = label;
+          img.loading = idx === 0 ? "eager" : "lazy";
+
+          slide.appendChild(img);
+          slides.push(slide);
+          slideFragment.appendChild(slide);
+
+          if (images.length > 1) {
+            const dot = document.createElement("button");
+            dot.type = "button";
+            dot.className = "dot";
+            if (idx === 0) dot.classList.add("active");
+            dot.setAttribute("aria-label", `Mostrar banner ${idx + 1}`);
+            dot.addEventListener("click", () => {
+              stop();
+              show(idx);
+              start();
+            });
+            dots.push(dot);
+            dotsFragment.appendChild(dot);
+          }
+        });
+
+        const dotsAnchor = carousel.querySelector("[data-carousel-dots]");
+        carousel.insertBefore(slideFragment, dotsAnchor || null);
+
+        if (dots.length) {
+          dotsContainer.innerHTML = "";
+          dotsContainer.appendChild(dotsFragment);
+        } else {
+          dotsContainer.style.display = "none";
+        }
+
         let index = 0;
+        const prefersReducedMotion =
+          typeof window.matchMedia === "function" &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        let timer = null;
+
         function show(i) {
-          slides.forEach((slide, n) => slide.classList.toggle("active", n === i));
-          dots.forEach((dot, n) => dot.classList.toggle("active", n === i));
+          if (i === index) return;
+          slides[index]?.classList.remove("active");
+          dots[index]?.classList.remove("active");
+
+          slides[i]?.classList.add("active");
+          dots[i]?.classList.add("active");
+          index = i;
         }
+
         function next() {
-          index = (index + 1) % slides.length;
-          show(index);
+          const target = (index + 1) % slides.length;
+          show(target);
         }
-        setInterval(next, 3000);
+
+        function start() {
+          if (prefersReducedMotion || slides.length <= 1) return;
+          stop();
+          timer = window.setInterval(next, 4000);
+        }
+
+        function stop() {
+          if (timer) {
+            clearInterval(timer);
+            timer = null;
+          }
+        }
+
+        carousel.addEventListener("mouseenter", stop);
+        carousel.addEventListener("mouseleave", start);
+        start();
       })();
 
       (function () {

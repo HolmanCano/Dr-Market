@@ -45,8 +45,10 @@
               <span class="badge">Env&iacute;os a todo el pa&iacute;s</span>
             </div>
           </div>
-          <figure>
-            <img src="img/modelo-1.svg" alt="Colecci&oacute;n Dr-Market">
+          <figure class="hero-visual" data-hero-visual>
+            <noscript>
+              <img src="img/Tienda/20251031_1806_Impresiones en Camisetas_simple_compose_01k8xkmn4xeghtvrm63cntc4zr.png" alt="Colecci&oacute;n Dr-Market">
+            </noscript>
           </figure>
         </div>
       </section>
@@ -166,6 +168,52 @@
         <a href="mailto:hola@drmarket.com">hola@drmarket.com</a>
       </div>
     </footer>
+    <script src="js/assets.js"></script>
+    <script>
+      (function () {
+        const hero = document.querySelector("[data-hero-visual]");
+        const assets = Array.isArray(window.siteAssets?.storeHero)
+          ? window.siteAssets.storeHero.filter(Boolean)
+          : [];
+        if (!hero || !assets.length) return;
+
+        const fragment = document.createDocumentFragment();
+        assets.forEach((src, idx) => {
+          const img = document.createElement("img");
+          img.className = "hero-visual-image";
+          if (idx === 0) img.classList.add("is-active");
+          img.src = src;
+          img.alt = `Colección Dr-Market ${idx + 1}`;
+          img.loading = idx === 0 ? "eager" : "lazy";
+          fragment.appendChild(img);
+        });
+
+        hero.appendChild(fragment);
+
+        if (assets.length < 2) return;
+
+        const prefersReducedMotion =
+          typeof window.matchMedia === "function" &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (prefersReducedMotion) return;
+
+        const images = Array.from(hero.querySelectorAll(".hero-visual-image"));
+        if (!images.length) return;
+        let index = 0;
+
+        function show(nextIndex) {
+          if (nextIndex === index) return;
+          images[index]?.classList.remove("is-active");
+          images[nextIndex]?.classList.add("is-active");
+          index = nextIndex;
+        }
+
+        setInterval(() => {
+          const next = (index + 1) % images.length;
+          show(next);
+        }, 5000);
+      })();
+    </script>
     <script src="js/cart.js"></script>
   </body>
 </html>
