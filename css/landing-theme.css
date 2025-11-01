@@ -594,6 +594,37 @@ textarea {
   opacity: 1;
 }
 
+/* Mobile-specific: center the hero visual image without changing desktop behavior
+   This keeps the image fully visible and centered on phones while preserving
+   the existing absolute/cover behavior on larger screens. */
+@media (max-width: 999px) {
+  .hero-visual {
+    /* center any contained image */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-visual-image {
+    /* let the image size naturally and center it inside the container */
+    position: static; /* avoid absolute positioning on small screens */
+    inset: auto;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center;
+    transition: opacity 0.5s ease; /* keep fade behavior */
+  }
+
+  .hero-visual noscript img {
+    position: static;
+    width: 100%;
+    height: auto;
+  }
+}
+
 .hero-visual noscript img {
   width: 100%;
   height: auto;
