@@ -1,6 +1,43 @@
 (function(){
   const STORAGE_KEY = 'cartItems';
   const FALLBACK_PREFIX = '__drm_market_cart__=';
+  const COLOR_PRESETS = {
+    'blanco': {
+      color: '#f8fafc',
+      opacity: 0.35,
+      blend: 'screen',
+      filter: 'grayscale(0.05) brightness(1.1) contrast(1.05)',
+      background: '#f8fafc'
+    },
+    'negro': {
+      color: '#0f172a',
+      opacity: 0.85,
+      blend: 'multiply',
+      filter: 'grayscale(0.75) brightness(0.6) contrast(1.25)',
+      background: '#e2e8f0'
+    },
+    'azul marino': {
+      color: '#1e3a8a',
+      opacity: 0.65,
+      blend: 'multiply',
+      filter: 'grayscale(0.25) saturate(1.2) brightness(0.98)',
+      background: '#dbeafe'
+    },
+    'rojo': {
+      color: '#dc2626',
+      opacity: 0.6,
+      blend: 'multiply',
+      filter: 'grayscale(0.25) saturate(1.25) brightness(1)',
+      background: '#fee2e2'
+    },
+    'verde': {
+      color: '#047857',
+      opacity: 0.55,
+      blend: 'multiply',
+      filter: 'grayscale(0.25) saturate(1.2) brightness(1.02)',
+      background: '#d1fae5'
+    }
+  };
 
   function parseArray(input){
     if (input == null || input === '') return null;
@@ -38,17 +75,44 @@
     }
   }
 
+  function normalizeLegacyItems(list){
+    if (!Array.isArray(list)) return [];
+    return list.map((item)=>{
+      if (typeof item !== 'object' || item === null) return { id: genId(), name: 'Producto', price: 0, quantity: 1, size: '', color: '', image: '' };
+      return {
+        id: item.id || genId(),
+        name: typeof item.name === 'string' ? item.name : 'Producto',
+        price: Number(item.price || 0) || 0,
+        quantity: Math.max(1, Number(item.quantity || 1) || 1),
+        size: typeof item.size === 'string' ? item.size : '',
+        color: typeof item.color === 'string' ? item.color : '',
+        image: typeof item.image === 'string' ? item.image : ''
+      };
+    });
+  }
+
+  function getColorPreset(name){
+    if (!name) return null;
+    const key = String(name).trim().toLowerCase();
+    const preset = COLOR_PRESETS[key];
+    if (!preset) return null;
+    return { ...preset };
+  }
+
   function readItems(){
     const localValue = parseArray(readFromLocal());
     if (localValue !== null) {
-      writeToFallback(localValue);
-      return localValue;
+      const normalized = normalizeLegacyItems(localValue);
+      writeToFallback(normalized);
+      writeToLocal(normalized);
+      return normalized;
     }
 
     const fallbackValue = readFromFallback();
     if (fallbackValue !== null) {
-      writeToLocal(fallbackValue);
-      return fallbackValue;
+      const normalized = normalizeLegacyItems(fallbackValue);
+      writeToLocal(normalized);
+      return normalized;
     }
     return [];
   }
@@ -60,7 +124,7 @@
   }
 
   function writeItems(items){
-    const list = Array.isArray(items) ? items : [];
+    const list = normalizeLegacyItems(Array.isArray(items) ? items : []);
     writeToFallback(list);
     if (!writeToLocal(list)) {
       // ensure badge updates even if localStorage is unavailable
@@ -123,11 +187,13 @@
         price: Number(partial?.price ?? 0) || 0,
         quantity: Math.max(1, Number(partial?.quantity ?? 1) || 1),
         size: String(partial?.size ?? '').trim(),
+        color: String(partial?.color ?? '').trim(),
         image: String(partial?.image ?? '').trim()
       };
       const existingIndex = items.findIndex((item) =>
         item.name === normalized.name &&
         item.size === normalized.size &&
+        item.color === normalized.color &&
         Number(item.price || 0) === normalized.price &&
         (item.image || '') === normalized.image
       );
@@ -159,7 +225,8 @@
     formatPrice,
     addListener,
     parseUrlParams,
-    updateBadge
+    updateBadge,
+    getColorPreset
   };
 
   window.cartManager = cartManager;

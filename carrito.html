@@ -92,6 +92,17 @@
 
           items.forEach((item)=>{
             const line = Number(item.price||0) * Number(item.quantity||1);
+            const sizeLabel = item.size ? String(item.size).toUpperCase() : 'Sin talla';
+            const colorLabel = item.color ? String(item.color) : 'Sin color';
+            const colorPreset = window.cartManager.getColorPreset(item.color);
+            const toneAttrs = colorPreset
+              ? `data-tone-active="true"${colorPreset.blend ? ` data-tone-blend="${colorPreset.blend}"` : ""} style="--tone-color:${colorPreset.color};--tone-opacity:${colorPreset.opacity};--tone-filter:${colorPreset.filter};--tone-bg:${colorPreset.background};"`
+              : 'data-tone-active="false"';
+            const thumbnail = item.image
+              ? `<div class="tone-thumb toneable" ${toneAttrs}>
+                  <img src="${item.image}" alt="${item.name || 'Producto'}">
+                </div>`
+              : '<div class="tone-thumb"><div class="icon">IMG</div></div>';
             const card = document.createElement('article');
             card.className = 'card';
             card.style.display = 'grid';
@@ -99,12 +110,14 @@
             card.style.alignItems = 'center';
             card.style.gap = '12px';
             card.innerHTML = `
-              <div style="width:80px;height:80px;background:#f2f2f2;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden">
-                ${item.image ? `<img src="${item.image}" alt="${item.name || 'Producto'}" style="max-width:100%;max-height:100%">` : '<div class="icon">IMG</div>'}
-              </div>
+              ${thumbnail}
               <div>
                 <div style="font-weight:600">${item.name || 'Producto'}</div>
-                <div style="opacity:0.7">${window.cartManager.formatPrice(Number(item.price||0))} &times; 
+                <div style="opacity:0.7;margin-top:4px;display:flex;gap:8px;flex-wrap:wrap;">
+                  <span>Talla: ${sizeLabel}</span>
+                  <span>Color: ${colorLabel}</span>
+                </div>
+                <div style="opacity:0.7;margin-top:4px">${window.cartManager.formatPrice(Number(item.price||0))} &times; 
                   <input type="number" min="1" value="${Number(item.quantity||1)}" data-id="${item.id}" class="qty" style="width:64px; margin-left:6px">
                 </div>
               </div>
