@@ -411,8 +411,8 @@ main {
 }
 
 .feature .icon {
-  width: 60px;
-  height: 60px;
+  width: 180px;
+  height: 70px;
   border-radius: 14px;
   background: rgba(78, 112, 223, 0.12);
   color: var(--accent);
@@ -420,6 +420,10 @@ main {
   place-items: center;
   font-size: 26px;
   font-weight: 700;
+  background-size: 120px;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: brightness(0);
 }
 
 .feature h4 {
